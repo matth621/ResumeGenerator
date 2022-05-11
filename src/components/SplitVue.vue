@@ -34,7 +34,9 @@
                 <h2 class="resume_subheading">{{ resume_data.resume_subtitle }}</h2>
                 <div class="resume_sidebar">
                     <div class="resume_address">
-                        <font-awesome-icons icon="house-chimney" />
+                        <div class="icon">
+                            <font-awesome-icons icon="house-chimney" />
+                        </div>
                         {{resume_data.resume_address_1}}<br v-if="resume_data.resume_address_1" />
                         {{resume_data.resume_address_2}}<br v-if="resume_data.resume_address_2" />
                         {{resume_data.resume_address_3}}<br v-if="resume_data.resume_address_3" />
@@ -47,17 +49,23 @@
                         {{resume_data.resume_email}}
                     </div>
                     <div class="resume_driving">
-                        <font-awesome-icons v-if="resume_data.resume_driver" icon="car" />
+                        <div class="icon" v-if="resume_data.resume_driver">
+                            <font-awesome-icons icon="car" />
+                        </div>
                         <strong>Driving Licence:</strong><br />
                         {{resume_data.resume_driver}}
                     </div>
                     <div class="resume_languages">
-                        <font-awesome-icons v-if="resume_data.resume_languages" icon="language" />
+                        <div class="icon" v-if="resume_data.resume_languages">
+                            <font-awesome-icons icon="language" />
+                        </div>
                         <strong>Languages:</strong><br />
                         <span v-for="lang in resume_data.resume_languages" :key="lang">{{lang}}<br /></span>
                     </div>
                     <div class="resume_competencies">
-                        <font-awesome-icons v-if="resume_data.resume_competencies" icon="gears" />
+                        <div class="icon" v-if="resume_data.resume_competencies">
+                        <font-awesome-icons icon="gears" />
+                        </div>
                         <strong>Key Competencies:</strong><br />
                         <div v-for="(skill, key) in resume_data.resume_competencies" :key="key">
                             {{skill.name}}
@@ -70,7 +78,9 @@
                         </div>
                     </div>
                     <div class="resume_hobbies">
-                        <font-awesome-icons v-if="resume_data.resume_hobbies" icon="star" />
+                        <div class="icon" v-if="resume_data.resume_hobbies">
+                            <font-awesome-icons v-if="resume_data.resume_hobbies" icon="star" />
+                        </div>
                         <strong>Hobbies:</strong><br />
                         {{ resume_data.resume_hobbies.join(', ')}}
                     </div>
@@ -120,6 +130,7 @@ import RecurringCompetency from './RecurringCompetency.vue';
 import WorkCardStack from './WorkCardStack.vue';
 import EducationCardStack from './EducationCardStack.vue';
 import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 export default {
     beforeMount() {
         let storedData = this.$cookies.get('resumeData');
@@ -139,15 +150,11 @@ export default {
     methods: {
         generatePDF() {
             let resume = window.document.getElementById("resume_preview");
-            let doc = new jsPDF();
-            doc.html(resume, {
-                callback: () => {
-                    doc.save("resume.pdf");
-                }, 
-                x: 0, 
-                y: 0,
-                width: 50,
-                windowWidth: 200
+            html2canvas(resume, {scale: 0.95}).then((canvas) => {
+                    var imgData = canvas.toDataURL('image/png');              
+                    var doc = new jsPDF('p', 'mm');
+                    doc.addImage(imgData, 'PNG', 0, 0);
+                    doc.save('resume.pdf');
             });
         },
         updateJSON() {
@@ -243,14 +250,15 @@ export default {
                 position: relative;
                 text-align: left;
                 margin: 15px 0 0 35px;
-                &>.svg-inline--fa {
+                .icon {
                     position: absolute;
-                    left: -30px;
+                    left: -33px;
                     top: -10px;
-                    color: white;
                     background-color: $darkish;
-                    padding: 5px;
+                    display: inline;
+                    padding: 5px 6px;
                     border-radius: 50px 50px 0 50px;
+                    color: #FFFFFF;
                 }
                 .competency_mark {
                     display: block;

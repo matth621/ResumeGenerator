@@ -1,2 +1,24 @@
-# ResumeGenerator
-Simple Project to Generate a Stunning Resume - Also an opportunity to learn Vue.js because why not
+# resume-generator
+
+## Project setup
+```
+yarn install
+```
+
+### Compiles and hot-reloads for development
+```
+yarn serve
+```
+
+### Compiles and minifies for production
+```
+yarn build
+```
+
+### Lints and fixes files
+```
+yarn lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).

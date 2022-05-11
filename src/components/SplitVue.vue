@@ -34,16 +34,77 @@
                 <h2 class="resume_subheading">{{ resume_data.resume_subtitle }}</h2>
                 <div class="resume_sidebar">
                     <div class="resume_address">
-                        {{resume_data.resume_address_1}} <br />
-                        {{resume_data.resume_address_2}} <br />
-                        {{resume_data.resume_address_3}} <br />
-                        {{resume_data.resume_address_4}} <br />
+                        <font-awesome-icons icon="house-chimney" />
+                        {{resume_data.resume_address_1}}<br v-if="resume_data.resume_address_1" />
+                        {{resume_data.resume_address_2}}<br v-if="resume_data.resume_address_2" />
+                        {{resume_data.resume_address_3}}<br v-if="resume_data.resume_address_3" />
+                        {{resume_data.resume_address_4}}<br v-if="resume_data.resume_address_4" />
                     </div>
                     <div class="resume_phone">
                         {{resume_data.resume_telephone}}
                     </div>
                     <div class="resume_email">
                         {{resume_data.resume_email}}
+                    </div>
+                    <div class="resume_driving">
+                        <font-awesome-icons v-if="resume_data.resume_driver" icon="car" />
+                        <strong>Driving Licence:</strong><br />
+                        {{resume_data.resume_driver}}
+                    </div>
+                    <div class="resume_languages">
+                        <font-awesome-icons v-if="resume_data.resume_languages" icon="language" />
+                        <strong>Languages:</strong><br />
+                        <span v-for="lang in resume_data.resume_languages" :key="lang">{{lang}}<br /></span>
+                    </div>
+                    <div class="resume_competencies">
+                        <font-awesome-icons v-if="resume_data.resume_competencies" icon="gears" />
+                        <strong>Key Competencies:</strong><br />
+                        <div v-for="(skill, key) in resume_data.resume_competencies" :key="key">
+                            {{skill.name}}
+                            <div class="competency_mark">
+                                <span v-for="index in 5" :key="index">
+                                    <font-awesome-icons v-if="skill.level >= index" icon="circle" />
+                                    <font-awesome-icons v-if="skill.level < index" :icon="['far', 'circle']" />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="resume_hobbies">
+                        <font-awesome-icons v-if="resume_data.resume_hobbies" icon="star" />
+                        <strong>Hobbies:</strong><br />
+                        {{ resume_data.resume_hobbies.join(', ')}}
+                    </div>
+                    <div class="resume_references">
+                        <hr />
+                        References Available Upon Request
+                    </div>
+                </div>
+                <div class="resume_main">
+                    <div class="motivation">
+                        <font-awesome-icons v-if="resume_data.resume_motivation" icon="quote-left" />
+                        {{resume_data.resume_motivation}}
+                    </div>
+                    <div class="education">
+                        <font-awesome-icons v-if="resume_data.resume_education" icon="graduation-cap" />
+                        <h2>Education</h2>
+                        <div v-for="education in resume_data.resume_education" :key="education">
+                            {{education.completionYear}} - <strong>{{education.courseName}}</strong><br />
+                            <em>{{education.educationName}}</em><br />
+                            {{education.keyAreas.join(', ')}}<br />
+                        </div>
+                    </div>
+                    <div class="work">
+                        <font-awesome-icons v-if="resume_data.resume_work_history" icon="briefcase" />
+                        <h2>Professional Experiences</h2>
+                        <div v-for="work in resume_data.resume_work_history" :key="work">
+                            <em>{{work.startDate}} - {{work.endDate}}:</em> <strong>"{{work.companyName}}", </strong>{{work.location}}<br />
+                            <strong>{{work.jobTitle}}</strong><br />
+                            <ul>
+                                <li v-for="responsibility in work.responsibilities" :key="responsibility">
+                                    {{responsibility}}
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -83,10 +144,10 @@ export default {
                 callback: () => {
                     doc.save("resume.pdf");
                 }, 
-                x: 10, 
-                y: 10,
-                width: 100,
-                windowWidth: 100
+                x: 0, 
+                y: 0,
+                width: 50,
+                windowWidth: 200
             });
         },
         updateJSON() {
@@ -132,17 +193,99 @@ export default {
         overflow-y: scroll;
     }
     .two-three {
-        background-color: white;
         flex: 67% 1 1;
+        overflow-y: scroll;
     }
     .resume_preview {
+        margin: 0 auto;
+        background-color: white;
         font-family: Avenir, Helvetica, Arial, sans-serif;
         color: $darkish;
+        position: relative;
+        overflow: hidden;
+        width: calc(210px * 4);
+        height: calc(297px * 4);
         .resume_heading {
+            position: absolute;
+            top: 15px;
+            left: 25px;
+            width: calc(100% - 25px - 30px);
+            margin: 0;
+            padding: 15px 15px 20px 15px;
             background-color: $lightest;
+            z-index: 10;
+        }
+        .resume_subheading {
+            position: absolute;
+            text-align: center;
+            width: calc(100% - 25px);
+            top: 42px;
+            left: 25px;
+            z-index: 11;
         }
         .resume_sidebar {
             background-color: $lighter;
+            position: absolute;
+            padding-top: 90px;
+            top: 0px;
+            left: 15px;
+            height: calc(100% - 90px);
+            width: 230px;
+            z-index: 9;
+            .resume_address,
+            .resume_phone,
+            .resume_email,
+            .resume_driving,
+            .resume_languages,
+            .resume_competencies,
+            .resume_hobbies,
+            .resume_references {
+                position: relative;
+                text-align: left;
+                margin: 15px 0 0 35px;
+                &>.svg-inline--fa {
+                    position: absolute;
+                    left: -30px;
+                    top: -10px;
+                    color: white;
+                    background-color: $darkish;
+                    padding: 5px;
+                    border-radius: 50px 50px 0 50px;
+                }
+                .competency_mark {
+                    display: block;
+                    &>span {
+                        margin-right: 5px;
+                    }
+                }
+                hr {
+                    border: none;
+                    border-top: $darkish 5px solid;
+                }
+            }
+            .resume_phone,
+            .resume_email {
+                margin-top: 0;
+            }
+        }
+        .resume_main {
+            text-align: left;
+            position: absolute;
+            top: 100px;
+            left: 250px;
+            .motivation {
+                font-size: 32px;
+            }
+            .svg-inline--fa {
+                font-size: 50px;
+            }
+            .education,
+            .work {
+                margin-top: 20px;
+                h2 {
+                    display: inline;
+                }
+            }
         }
     }
 </style>

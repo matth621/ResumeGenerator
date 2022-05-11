@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2>{{ title }}</h2>
+        <h2><font-awesome-icons v-if="icon" :icon="icon" /> {{ title }}</h2>
         <slot />
     </div>
 </template>
@@ -9,7 +9,8 @@
 export default {
     name: 'CardObject',
     props: {
-        title: String
+        title: String,
+        icon: String
     }
 }
 </script>

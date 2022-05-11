@@ -1,7 +1,7 @@
 <template>
     <div class="split-vue">
         <div class="one-three">
-            <Card title="About You">
+            <Card title="About You" icon="user">
                 <TextInput name="Name" v-model="resume_data.resume_name" @blur="updateJSON" />
                 <TextInput name="Subtitle" v-model="resume_data.resume_subtitle" @blur="updateJSON" />
                 <TextInput name="Address Line 1" v-model="resume_data.resume_address_1" @blur="updateJSON" />
@@ -11,20 +11,20 @@
                 <TextInput name="Telephone" v-model="resume_data.resume_telephone" @blur="updateJSON" />
                 <TextInput name="E-Mail" v-model="resume_data.resume_email" @blur="updateJSON" />
             </Card>
-            <Card title="Motivation" >
+            <Card title="Motivation" icon="lightbulb">
                 <TextInput name="Motivational Statement" v-model="resume_data.resume_motivation" @blur="updateJSON" />
             </Card>
-            <Card title="Abilities">
+            <Card title="Abilities" icon="list-check">
                 <TextInput name="Drivers Licence" v-model="resume_data.resume_driver" @blur="updateJSON" />
                 <RecurringTextVue name="Languages" v-model="resume_data.resume_languages" @blur="updateJSON" />
                 <RecurringCompetency name="Competencies" v-model="resume_data.resume_competencies" @blur="updateJSON" />
                 <RecurringTextVue name="Hobbies" v-model="resume_data.resume_hobbies" @blur="updateJSON" />
                 <TextInput name="Other Data" v-model="resume_data.resume_other" @blur="updateJSON" />
             </Card>
-            <Card title="Work Experience">
+            <Card title="Work Experience" icon="briefcase">
                 <WorkCardStack v-model="resume_data.resume_work_history" @blur="updateJSON" />
             </Card>
-            <Card title="Education">
+            <Card title="Education" icon="user-graduate">
                 <EducationCardStack v-model="resume_data.resume_education" @blur="updateJSON" />
             </Card>
         </div>

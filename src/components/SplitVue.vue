@@ -28,8 +28,8 @@
                 <EducationCardStack v-model="resume_data.resume_education" @blur="updateJSON" />
             </Card>
         </div>
-        <div class="two-three">
-            <div class="resume_preview">
+        <div class="two-three" @click="generatePDF">
+            <div id="resume_preview" class="resume_preview">
                 <h1 class="resume_heading">{{ resume_data.resume_name }}</h1>
                 <h2 class="resume_subheading">{{ resume_data.resume_subtitle }}</h2>
                 <div class="resume_sidebar">
@@ -58,6 +58,7 @@ import RecurringTextVue from './RecurringTextVue.vue';
 import RecurringCompetency from './RecurringCompetency.vue';
 import WorkCardStack from './WorkCardStack.vue';
 import EducationCardStack from './EducationCardStack.vue';
+import { jsPDF } from 'jspdf';
 export default {
     beforeMount() {
         let storedData = this.$cookies.get('resumeData');
@@ -67,14 +68,27 @@ export default {
         }
     },
     components: {
-    Card,
-    TextInput,
-    RecurringTextVue,
-    RecurringCompetency,
-    WorkCardStack,
-    EducationCardStack
-},
+        Card,
+        TextInput,
+        RecurringTextVue,
+        RecurringCompetency,
+        WorkCardStack,
+        EducationCardStack
+    },
     methods: {
+        generatePDF() {
+            let resume = window.document.getElementById("resume_preview");
+            let doc = new jsPDF();
+            doc.html(resume, {
+                callback: () => {
+                    doc.save("resume.pdf");
+                }, 
+                x: 10, 
+                y: 10,
+                width: 100,
+                windowWidth: 100
+            });
+        },
         updateJSON() {
             this.$cookies.set('resumeData', JSON.stringify(this.resume_data));
         }
@@ -122,6 +136,8 @@ export default {
         flex: 67% 1 1;
     }
     .resume_preview {
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        color: $darkish;
         .resume_heading {
             background-color: $lightest;
         }

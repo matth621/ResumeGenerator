@@ -84,6 +84,9 @@
                         <strong>Hobbies:</strong><br />
                         {{ resume_data.resume_hobbies.join(', ')}}
                     </div>
+                    <div class="resume_other">
+                        {{ resume_data.resume_other }}
+                    </div>
                     <div class="resume_references">
                         <hr />
                         References Available Upon Request
@@ -150,10 +153,15 @@ export default {
     methods: {
         generatePDF() {
             let resume = window.document.getElementById("resume_preview");
-            html2canvas(resume, {scale: 0.95}).then((canvas) => {
-                    var imgData = canvas.toDataURL('image/png');              
-                    var doc = new jsPDF('p', 'mm');
-                    doc.addImage(imgData, 'PNG', 0, 0);
+            html2canvas(resume, {scale: 2}).then((canvas) => {
+                    var imgData = canvas.toDataURL('image/png', 1);
+                    var doc = new jsPDF({
+                        orientation: 'p', 
+                        unit: 'px', 
+                        format:'a4', 
+                        hotfixes: ['px_scaling']
+                        });
+                    doc.addImage(imgData, 'PNG', 0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight());
                     doc.save('resume.pdf');
             });
         },
@@ -246,6 +254,7 @@ export default {
             .resume_languages,
             .resume_competencies,
             .resume_hobbies,
+            .resume_other,
             .resume_references {
                 position: relative;
                 text-align: left;
